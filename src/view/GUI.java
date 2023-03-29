@@ -25,6 +25,8 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.BorderLayout;
@@ -35,25 +37,29 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+
+import controller.ShowAdvancedOption;
+import controller.VirtualKeyBoard;
+
 import java.awt.FlowLayout;
 import javax.swing.BoxLayout;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.JSplitPane;
 
-public class GUI {
+public class GUI extends JFrame {
 
-	private JFrame frame;
-	private JTextField textField;
+	private JTextField textFieldFind;
 	private Dimension dimesionForButton, dimesionFortextField, dimesionForPanel, dimesionForComboBox,
 			dimesionProductFrame;
 	private JButton buttonFind;
 	private String[] listItem = { "All", "Drink", "Food", "Bake" };
 	private Object[] nameColumn = { false, "Product Name", "Price", "Quantity", "Account", "Action" };
-	private JComboBox comboBoxFilter, comboBoxFilterAdvanced;
-	private JCheckBox[] checkBoxDrink = { new JCheckBox(""), new JCheckBox("") };
-	private JCheckBox[] checkBoxBake = { new JCheckBox(""), new JCheckBox("") };
-	private JCheckBox[] checkBoxFood = { new JCheckBox(""), new JCheckBox("") };
+	private JComboBox comboBoxFilter;
+	private JComboBox<JCheckBox> comboBoxFilterAdvanced;
+	private JCheckBox[] checkBoxDrink = { new JCheckBox("Hot"), new JCheckBox("Cold") };
+	private JCheckBox[] checkBoxBake = { new JCheckBox("Banh man"), new JCheckBox("Banh ngot") };
+	private JCheckBox[] checkBoxFood = { new JCheckBox("Snack"), new JCheckBox("VN Food") };
 	private ArrayList<Product> listProducts;
 	private Color colorProductPanel = new Color(247, 219, 106);
 	private JTable tableProduct;
@@ -90,7 +96,7 @@ public class GUI {
 					store.addProduct(new Product("Cam4", "1", 20, "src\\image\\juice.jpg", 100));
 
 					GUI window = new GUI(store);
-					window.frame.setVisible(true);
+					window.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -110,19 +116,17 @@ public class GUI {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int screenWidth = (int) screenSize.getWidth();
 		int screenHeight = (int) screenSize.getHeight();
-		frame.setSize((int) (screenWidth * 0.8), (int) (screenHeight * 0.8));
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setSize((int) (screenWidth * 0.8), (int) (screenHeight * 0.8));
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		display();
 	}
 
 	public void display() {
 
-//		dimesionForPanel = new Dimension();
-		frame.getContentPane().setLayout(new GridLayout(1, 2, 5, 5));
+		getContentPane().setLayout(new GridLayout(1, 2, 5, 5));
 
 		JPanel panelBill = createPanelBill();
 
@@ -136,24 +140,24 @@ public class GUI {
 
 	public JPanel createPanelSelect() {
 		JPanel panelSelect = new JPanel();
-		frame.getContentPane().add(panelSelect);
 		panelSelect.setLayout(new BorderLayout());
+		getContentPane().add(panelSelect);
 
 		JPanel panelSearch = new JPanel();
-		panelSelect.add(panelSearch, BorderLayout.NORTH);
-
 		panelSearch.setLayout(new BorderLayout(2, 2));
 		panelSearch.setPreferredSize(new Dimension(panelSelect.getWidth(), 40));
+		panelSelect.add(panelSearch, BorderLayout.NORTH);
 
 		JPanel panelTextField = new JPanel();
 		panelTextField.setLayout(new BorderLayout(2, 2));
 		panelSearch.add(panelTextField, BorderLayout.CENTER);
 		panelSearch.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
 
-		textField = new JTextField();
+		textFieldFind = new JTextField();
 		dimesionFortextField = new Dimension(100, panelSearch.getHeight());
-		textField.setPreferredSize(dimesionFortextField);
-		panelTextField.add(textField, BorderLayout.CENTER);
+		textFieldFind.setPreferredSize(dimesionFortextField);
+		panelTextField.add(textFieldFind, BorderLayout.CENTER);
+		VirtualKeyBoard virtualKeyboard = new VirtualKeyBoard(GUI.this, this.textFieldFind);
 
 		buttonFind = new JButton("Find");
 		dimesionForButton = new Dimension(60, panelSearch.getHeight());
@@ -168,6 +172,8 @@ public class GUI {
 		dimesionForComboBox = new Dimension(70, panelSearch.getHeight());
 		comboBoxFilter.setPreferredSize(dimesionForComboBox);
 		panelComboBox.add(comboBoxFilter);
+		ShowAdvancedOption sao = new ShowAdvancedOption(this);
+		comboBoxFilter.addActionListener(sao);
 
 		comboBoxFilterAdvanced = new JComboBox();
 		comboBoxFilterAdvanced.setEnabled(false);
@@ -181,7 +187,7 @@ public class GUI {
 		JPanel panelBill = new JPanel();
 		panelBill.setLayout(new BorderLayout());
 		panelBill.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
-		frame.getContentPane().add(panelBill);
+		getContentPane().add(panelBill);
 		tableProduct = new JTable();
 		tableProduct.setModel(
 				new DefaultTableModel(new Object[][] { { null, null, null, null, null, null }, }, nameColumn));
@@ -215,6 +221,10 @@ public class GUI {
 		panelRemove.add(checkBoxSelectAll, BorderLayout.WEST);
 
 		buttonRemove = new JButton("Remove");
+		buttonRemove.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		buttonRemove.setEnabled(false);
 		buttonRemove.setPreferredSize(new Dimension(84, 40));
 		panelRemove.add(buttonRemove, BorderLayout.EAST);
@@ -258,10 +268,6 @@ public class GUI {
 		JButton buttonPay = new JButton("Pay");
 		buttonPay.setPreferredSize(new Dimension(80, 60));
 		panelPay.add(buttonPay, BorderLayout.EAST);
-	
-//		
-//		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panelRemove, panel);
-//		panelDetail.add(splitPane, BorderLayout.NORTH);
 
 		return panelBill;
 	}
@@ -347,6 +353,110 @@ public class GUI {
 				int row, int column) {
 			return selectAll;
 		}
+	}
+
+	public JTextField getTextFieldFind() {
+		return textFieldFind;
+	}
+
+	public void setTextFieldFind(JTextField textFieldFind) {
+		this.textFieldFind = textFieldFind;
+	}
+
+	public JButton getButtonFind() {
+		return buttonFind;
+	}
+
+	public void setButtonFind(JButton buttonFind) {
+		this.buttonFind = buttonFind;
+	}
+
+	public JComboBox getComboBoxFilter() {
+		return comboBoxFilter;
+	}
+
+	public void setComboBoxFilter(JComboBox comboBoxFilter) {
+		this.comboBoxFilter = comboBoxFilter;
+	}
+
+	public JComboBox getComboBoxFilterAdvanced() {
+		return comboBoxFilterAdvanced;
+	}
+
+	public void setComboBoxFilterAdvanced(JComboBox comboBoxFilterAdvanced) {
+		this.comboBoxFilterAdvanced = comboBoxFilterAdvanced;
+	}
+
+	public JCheckBox[] getCheckBoxDrink() {
+		return checkBoxDrink;
+	}
+
+	public void setCheckBoxDrink(JCheckBox[] checkBoxDrink) {
+		this.checkBoxDrink = checkBoxDrink;
+	}
+
+	public JCheckBox[] getCheckBoxBake() {
+		return checkBoxBake;
+	}
+
+	public void setCheckBoxBake(JCheckBox[] checkBoxBake) {
+		this.checkBoxBake = checkBoxBake;
+	}
+
+	public JCheckBox[] getCheckBoxFood() {
+		return checkBoxFood;
+	}
+
+	public void setCheckBoxFood(JCheckBox[] checkBoxFood) {
+		this.checkBoxFood = checkBoxFood;
+	}
+
+	public Color getColorProductPanel() {
+		return colorProductPanel;
+	}
+
+	public void setColorProductPanel(Color colorProductPanel) {
+		this.colorProductPanel = colorProductPanel;
+	}
+
+	public JCheckBox getSelectAll() {
+		return selectAll;
+	}
+
+	public void setSelectAll(JCheckBox selectAll) {
+		this.selectAll = selectAll;
+	}
+
+	public JTextField getTextFieldCoupon() {
+		return textFieldCoupon;
+	}
+
+	public void setTextFieldCoupon(JTextField textFieldCoupon) {
+		this.textFieldCoupon = textFieldCoupon;
+	}
+
+	public JButton getButtonSummit() {
+		return buttonSummit;
+	}
+
+	public void setButtonSummit(JButton buttonSummit) {
+		this.buttonSummit = buttonSummit;
+	}
+
+	public JButton getButtonRemove() {
+		return buttonRemove;
+	}
+
+	public void setButtonRemove(JButton buttonRemove) {
+		this.buttonRemove = buttonRemove;
+	}
+
+	public JCheckBox getCheckBoxSelectAll() {
+		return checkBoxSelectAll;
+	}
+
+	public void setCheckBoxSelectAll(JCheckBox checkBoxSelectAll) {
+		this.checkBoxSelectAll = checkBoxSelectAll;
 	}
 
 }
