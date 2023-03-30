@@ -81,9 +81,6 @@ public class GUI extends JFrame {
 					store.addProduct(new Product("Cam4", "1", 20, "src\\image\\juice.jpg", 100));
 					store.addProduct(new Product("Cam4", "1", 20, "src\\image\\juice.jpg", 100));
 					store.addProduct(new Product("Cam4", "1", 20, "src\\image\\juice.jpg", 100));
-					store.addProduct(new Product("Cam4", "1", 20, "src\\image\\juice.jpg", 100));
-					store.addProduct(new Product("Cam4", "1", 20, "src\\image\\juice.jpg", 100));
-					store.addProduct(new Product("Cam4", "1", 20, "src\\image\\juice.jpg", 100));
 
 					GUI window = new GUI(store);
 					window.setVisible(true);
