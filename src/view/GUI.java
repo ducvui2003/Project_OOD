@@ -38,7 +38,6 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import controller.ShowAdvancedOption;
 import controller.VirtualKeyBoard;
 
 import java.awt.FlowLayout;
@@ -130,57 +129,50 @@ public class GUI extends JFrame {
 
 		JPanel panelBill = createPanelBill();
 
-		JPanel panelSelect = createPanelSelect();
+		PanelChooseProduct panelChooseProduct = new PanelChooseProduct(this);
 
-		JPanel panelProduct = createListPanel();
-
-		JScrollPane scrollPaneProduct = new JScrollPane(panelProduct);
-		panelSelect.add(scrollPaneProduct);
+//		JPanel panelSelect = createPanelSelect();
+//		JPanel panelProduct = createListPanel();
+//		JScrollPane scrollPaneProduct = new JScrollPane(panelProduct);
+//		panelSelect.add(scrollPaneProduct);
 	}
 
-	public JPanel createPanelSelect() {
-		JPanel panelSelect = new JPanel();
-		panelSelect.setLayout(new BorderLayout());
-		getContentPane().add(panelSelect);
-
-		JPanel panelSearch = new JPanel();
-		panelSearch.setLayout(new BorderLayout(2, 2));
-		panelSearch.setPreferredSize(new Dimension(panelSelect.getWidth(), 40));
-		panelSelect.add(panelSearch, BorderLayout.NORTH);
-
-		JPanel panelTextField = new JPanel();
-		panelTextField.setLayout(new BorderLayout(2, 2));
-		panelSearch.add(panelTextField, BorderLayout.CENTER);
-		panelSearch.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
-
-		textFieldFind = new JTextField();
-		dimesionFortextField = new Dimension(100, panelSearch.getHeight());
-		textFieldFind.setPreferredSize(dimesionFortextField);
-		panelTextField.add(textFieldFind, BorderLayout.CENTER);
-		VirtualKeyBoard virtualKeyboard = new VirtualKeyBoard(GUI.this, this.textFieldFind);
-
-		buttonFind = new JButton("Find");
-		dimesionForButton = new Dimension(60, panelSearch.getHeight());
-		buttonFind.setPreferredSize(dimesionForButton);
-		panelTextField.add(buttonFind, BorderLayout.EAST);
-
-		JPanel panelComboBox = new JPanel();
-		panelComboBox.setLayout(new GridLayout(1, 2, 2, 2));
-
-		comboBoxFilter = new JComboBox(listItem);
-		comboBoxFilter.setSelectedIndex(0);
-		dimesionForComboBox = new Dimension(70, panelSearch.getHeight());
-		comboBoxFilter.setPreferredSize(dimesionForComboBox);
-		panelComboBox.add(comboBoxFilter);
-		ShowAdvancedOption sao = new ShowAdvancedOption(this);
-		comboBoxFilter.addActionListener(sao);
-
-		comboBoxFilterAdvanced = new JComboBox();
-		comboBoxFilterAdvanced.setEnabled(false);
-		panelComboBox.add(comboBoxFilterAdvanced);
-		panelSearch.add(panelComboBox, BorderLayout.EAST);
-		return panelSelect;
-	}
+//	public JPanel createPanelSelect() {
+//		JPanel panelSelect = new JPanel();
+//		panelSelect.setLayout(new BorderLayout());
+//		getContentPane().add(panelSelect);
+//		JPanel panelSearch = new JPanel();
+//		panelSearch.setLayout(new BorderLayout(2, 2));
+//		panelSearch.setPreferredSize(new Dimension(panelSelect.getWidth(), 40));
+//		panelSelect.add(panelSearch, BorderLayout.NORTH);
+//		JPanel panelTextField = new JPanel();
+//		panelTextField.setLayout(new BorderLayout(2, 2));
+//		panelSearch.add(panelTextField, BorderLayout.CENTER);
+//		panelSearch.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+//		textFieldFind = new JTextField();
+//		dimesionFortextField = new Dimension(100, panelSearch.getHeight());
+//		textFieldFind.setPreferredSize(dimesionFortextField);
+//		panelTextField.add(textFieldFind, BorderLayout.CENTER);
+//		VirtualKeyBoard virtualKeyboard = new VirtualKeyBoard(GUI.this, this.textFieldFind);
+//		buttonFind = new JButton("Find");
+//		dimesionForButton = new Dimension(60, panelSearch.getHeight());
+//		buttonFind.setPreferredSize(dimesionForButton);
+//		panelTextField.add(buttonFind, BorderLayout.EAST);
+//		JPanel panelComboBox = new JPanel();
+//		panelComboBox.setLayout(new GridLayout(1, 2, 2, 2));
+//		comboBoxFilter = new JComboBox(listItem);
+//		comboBoxFilter.setSelectedIndex(0);
+//		dimesionForComboBox = new Dimension(70, panelSearch.getHeight());
+//		comboBoxFilter.setPreferredSize(dimesionForComboBox);
+//		panelComboBox.add(comboBoxFilter);
+//		ShowAdvancedOption sao = new ShowAdvancedOption(this);
+//		comboBoxFilter.addActionListener(sao);
+//		comboBoxFilterAdvanced = new JComboBox();
+//		comboBoxFilterAdvanced.setEnabled(false);
+//		panelComboBox.add(comboBoxFilterAdvanced);
+//		panelSearch.add(panelComboBox, BorderLayout.EAST);
+//		return panelSelect;
+//	}
 
 	public JPanel createPanelBill() {
 		JScrollPane scrollPaneTable = new JScrollPane();
@@ -272,73 +264,69 @@ public class GUI extends JFrame {
 		return panelBill;
 	}
 
-	public JPanel createListPanel() {
-		dimesionProductFrame = new Dimension(100, 100);
-		JPanel panelProduct = new JPanel(new GridLayout(0, 4, 10, 10));
-		for (int i = 0; i < listProducts.size(); i++) {
-			Product product = listProducts.get(i);
-			JPanel item = createPanelProduct(product.getName(), product.getId(), product.getQuantity(),
-					product.getFileName(), product.getPrice());
-			item.setPreferredSize(dimesionProductFrame);
-			panelProduct.add(item);
-		}
-		return panelProduct;
-	}
+//	public JPanel createListPanel() {
+//		dimesionProductFrame = new Dimension(100, 100);
+//		JPanel panelProduct = new JPanel(new GridLayout(0, 4, 10, 10));
+//		for (int i = 0; i < listProducts.size(); i++) {
+//			Product product = listProducts.get(i);
+//			JPanel item = createPanelProduct(product.getName(), product.getId(), product.getQuantity(),
+//					product.getFileName(), product.getPrice());
+//			item.setPreferredSize(dimesionProductFrame);
+//			panelProduct.add(item);
+//		}
+//		return panelProduct;
+//	}
 
-	private JPanel createPanelProduct(String name, String id, int quantity, String linkImage, double price) {
-		Border border = new RoundBorder(10, 3, colorProductPanel);
+//	private JPanel createPanelProduct(String name, String id, int quantity, String linkImage, double price) {
+//		Border border = new RoundBorder(10, 3, colorProductPanel);
 //		Create Frame product
-		JPanel panel = new JPanel();
-		panel.setLayout(new BorderLayout());
-
+//		JPanel panel = new JPanel();
+//		panel.setLayout(new BorderLayout());
 //		Create Frame Image
-		JPanel panelImage = new JPanel();
-		panelImage.setLayout(new BorderLayout());
-		panel.setBorder(border);
-
+//		JPanel panelImage = new JPanel();
+//		panelImage.setLayout(new BorderLayout());
+//		panel.setBorder(border);
 //		ImageIcon imageIcon = new ImageIcon(linkImage);
-		JLabel imageLabel = addImage(linkImage);
-		panelImage.add(imageLabel, BorderLayout.CENTER);
-		panel.add(panelImage, BorderLayout.CENTER);
-
+//		JLabel imageLabel = addImage(linkImage);
+//		panelImage.add(imageLabel, BorderLayout.CENTER);
+//		panel.add(panelImage, BorderLayout.CENTER);
 //		Create Frame product info
-		JPanel panelInfo = new JPanel();
-		panelInfo.setLayout(new GridLayout(4, 1, 5, 5));
-		JLabel nameLabel = new JLabel("Ten sp: " + name);
-		nameLabel.setHorizontalAlignment(JLabel.CENTER);
-		panelInfo.add(nameLabel);
-		JLabel idLabel = new JLabel("ID: " + id);
-		idLabel.setHorizontalAlignment(JLabel.CENTER);
-		panelInfo.add(idLabel);
-		JLabel priceLabel = new JLabel("Price: " + price + " VND");
-		panelInfo.add(priceLabel);
-		priceLabel.setHorizontalAlignment(JLabel.CENTER);
-		JLabel quantityLabel = new JLabel("Quantity: " + quantity);
-		quantityLabel.setHorizontalAlignment(JLabel.CENTER);
-		panelInfo.add(quantityLabel);
-		panel.add(panelInfo, BorderLayout.SOUTH);
-
+//		JPanel panelInfo = new JPanel();
+//		panelInfo.setLayout(new GridLayout(4, 1, 5, 5));
+//		JLabel nameLabel = new JLabel("Ten sp: " + name);
+//		nameLabel.setHorizontalAlignment(JLabel.CENTER);
+//		panelInfo.add(nameLabel);
+//		JLabel idLabel = new JLabel("ID: " + id);
+//		idLabel.setHorizontalAlignment(JLabel.CENTER);
+//		panelInfo.add(idLabel);
+//		JLabel priceLabel = new JLabel("Price: " + price + " VND");
+//		panelInfo.add(priceLabel);
+//		priceLabel.setHorizontalAlignment(JLabel.CENTER);
+//		JLabel quantityLabel = new JLabel("Quantity: " + quantity);
+//		quantityLabel.setHorizontalAlignment(JLabel.CENTER);
+//		panelInfo.add(quantityLabel);
+//		panel.add(panelInfo, BorderLayout.SOUTH);
 //		Decorate panel
-		panel.setBorder(border);
-		panel.setBackground(colorProductPanel);
-		panelInfo.setBackground(colorProductPanel);
-		panelImage.setBackground(colorProductPanel);
-		return panel;
-	}
+//		panel.setBorder(border);
+//		panel.setBackground(colorProductPanel);
+//		panelInfo.setBackground(colorProductPanel);
+//		panelImage.setBackground(colorProductPanel);
+//		return panel;
+//	}
 
-	private JLabel addImage(String linkImage) {
-		ImageIcon imageIcon = new ImageIcon(linkImage);
-		JLabel imageLabel = new JLabel(imageIcon);
-		imageLabel.setSize(new Dimension(200, 200));
-		Image image = imageIcon.getImage();
-		Image scaledImage = image.getScaledInstance(imageLabel.getWidth(), imageLabel.getHeight(), Image.SCALE_SMOOTH);
-		ImageIcon scaledIcon = new ImageIcon(scaledImage);
-		imageLabel.setIcon(scaledIcon);
-
-		imageLabel.setHorizontalAlignment(JLabel.CENTER);
-		imageLabel.setVerticalAlignment(JLabel.CENTER);
-		return imageLabel;
-	}
+//	private JLabel addImage(String linkImage) {
+//		ImageIcon imageIcon = new ImageIcon(linkImage);
+//		JLabel imageLabel = new JLabel(imageIcon);
+//		imageLabel.setSize(new Dimension(200, 200));
+//		Image image = imageIcon.getImage();
+//		Image scaledImage = image.getScaledInstance(imageLabel.getWidth(), imageLabel.getHeight(), Image.SCALE_SMOOTH);
+//		ImageIcon scaledIcon = new ImageIcon(scaledImage);
+//		imageLabel.setIcon(scaledIcon);
+//
+//		imageLabel.setHorizontalAlignment(JLabel.CENTER);
+//		imageLabel.setVerticalAlignment(JLabel.CENTER);
+//		return imageLabel;
+//	}
 
 	class CheckboxHeader implements TableCellRenderer {
 
@@ -457,6 +445,14 @@ public class GUI extends JFrame {
 
 	public void setCheckBoxSelectAll(JCheckBox checkBoxSelectAll) {
 		this.checkBoxSelectAll = checkBoxSelectAll;
+	}
+
+	public ArrayList<Product> getListProducts() {
+		return listProducts;
+	}
+
+	public void setListProducts(ArrayList<Product> listProducts) {
+		this.listProducts = listProducts;
 	}
 
 }
