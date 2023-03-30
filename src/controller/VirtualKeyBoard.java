@@ -32,7 +32,7 @@ public class VirtualKeyBoard extends JDialog implements ActionListener {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				setTitle("On Screen Keyboard");
-				setSize(1000, 300);
+				setSize(frame.getWidth(), 300);
 //				setModal(true);
 				setVisible(true);
 				setLocationRelativeTo(frame);

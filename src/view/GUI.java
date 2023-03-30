@@ -1,54 +1,41 @@
 package view;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import java.awt.GridLayout;
-import java.awt.Image;
-
-import javax.swing.JTextField;
-import javax.swing.border.Border;
-
-import model.Product;
-import model.Store;
-
-import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.awt.event.ActionEvent;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-
+import javax.swing.JTextField;
+import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import controller.ShowAdvancedOption;
 import controller.VirtualKeyBoard;
-
-import java.awt.FlowLayout;
-import javax.swing.BoxLayout;
-import javax.swing.JSeparator;
-import javax.swing.SwingConstants;
-import javax.swing.JSplitPane;
+import model.Product;
+import model.Store;
 
 public class GUI extends JFrame {
 
+	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	private JTextField textFieldFind;
 	private Dimension dimesionForButton, dimesionFortextField, dimesionForPanel, dimesionForComboBox,
 			dimesionProductFrame;
@@ -61,13 +48,16 @@ public class GUI extends JFrame {
 	private JCheckBox[] checkBoxBake = { new JCheckBox("Banh man"), new JCheckBox("Banh ngot") };
 	private JCheckBox[] checkBoxFood = { new JCheckBox("Snack"), new JCheckBox("VN Food") };
 	private ArrayList<Product> listProducts;
-	private Color colorProductPanel = new Color(247, 219, 106);
-	private JTable tableProduct;
+
+	private TableBill tableBill;
 	private JCheckBox selectAll;
 	private JTextField textFieldCoupon;
 	private JButton buttonSummit;
 	private JButton buttonRemove;
 	private JCheckBox checkBoxSelectAll;
+
+//	width and height component
+	double widthPanelSelectProduct;
 
 	/**
 	 * Launch the application.
@@ -116,10 +106,10 @@ public class GUI extends JFrame {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setTitle("Vending machine");
 		int screenWidth = (int) screenSize.getWidth();
 		int screenHeight = (int) screenSize.getHeight();
-		setSize((int) (screenWidth * 0.8), (int) (screenHeight * 0.8));
+		setSize((int) (screenWidth), (int) (screenHeight));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		display();
 	}
@@ -130,15 +120,23 @@ public class GUI extends JFrame {
 
 		JPanel panelBill = createPanelBill();
 
+		this.getContentPane().add(panelBill);
+		JPanel panelProductSelect = new JPanel();
+		this.getContentPane().add(panelProductSelect);
+		widthPanelSelectProduct = panelProductSelect.getPreferredSize().getWidth();
+		panelProductSelect.setLayout(new BorderLayout());
+
 		JPanel panelSelect = createPanelSelect();
+		panelProductSelect.add(panelSelect, BorderLayout.NORTH);
 
-		JPanel panelProduct = createListPanel();
-
+		JPanel panelProduct = createListItemProduct(3);
 		JScrollPane scrollPaneProduct = new JScrollPane(panelProduct);
 		panelSelect.add(scrollPaneProduct);
+		panelProductSelect.add(scrollPaneProduct, BorderLayout.CENTER);
+
 	}
 
-	public JPanel createPanelSelect() {
+	private JPanel createPanelSelect() {
 		JPanel panelSelect = new JPanel();
 		panelSelect.setLayout(new BorderLayout());
 		getContentPane().add(panelSelect);
@@ -182,52 +180,66 @@ public class GUI extends JFrame {
 		return panelSelect;
 	}
 
-	public JPanel createPanelBill() {
-		JScrollPane scrollPaneTable = new JScrollPane();
+	private JPanel createPanelBill() {
 		JPanel panelBill = new JPanel();
-		panelBill.setLayout(new BorderLayout());
+		panelBill.setLayout(new BorderLayout(0, 20));
 		panelBill.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
-		getContentPane().add(panelBill);
-		tableProduct = new JTable();
-		tableProduct.setModel(
-				new DefaultTableModel(new Object[][] { { null, null, null, null, null, null }, }, nameColumn));
 
-		TableColumn tableColumn = tableProduct.getColumnModel().getColumn(0);
-		tableColumn.setCellRenderer(tableProduct.getDefaultRenderer(Boolean.class));
-		tableColumn.setCellEditor(tableProduct.getDefaultEditor(Boolean.class));
-		tableColumn.setHeaderRenderer(new CheckboxHeader("Select All"));
-		tableProduct.getTableHeader().setReorderingAllowed(false);
-		tableProduct.getColumnModel().getColumn(0).setPreferredWidth(103);
-		tableProduct.getColumnModel().getColumn(1).setPreferredWidth(97);
-		tableProduct.getColumnModel().getColumn(2).setPreferredWidth(90);
-		tableProduct.getColumnModel().getColumn(3).setPreferredWidth(82);
-		tableProduct.getColumnModel().getColumn(4).setPreferredWidth(95);
-		tableColumn.setCellRenderer(tableProduct.getDefaultRenderer(Boolean.class));
-		tableColumn.setCellEditor(tableProduct.getDefaultEditor(Boolean.class));
-		tableColumn.setHeaderRenderer(new CheckboxHeader("Select All"));
-		tableProduct.getTableHeader().setReorderingAllowed(false);
-		scrollPaneTable.setViewportView(tableProduct);
-		panelBill.add(scrollPaneTable, BorderLayout.NORTH);
+//		Table bill
+//	continue
 
-		JPanel panelDetail = new JPanel();
+//		Detail bill: price, coupon,...
+		JPanel panelDetail = panelDetailBill();
 		panelBill.add(panelDetail, BorderLayout.SOUTH);
+		return panelBill;
+	}
+
+//	private JTable tableBill() {
+//		tableProduct = new JTable();
+//		tableProduct.setModel(
+//				new DefaultTableModel(new Object[][] { { null, null, null, null, null, null }, }, nameColumn));
+//
+//		TableColumn tableColumn = tableProduct.getColumnModel().getColumn(0);
+//		tableColumn.setCellRenderer(tableProduct.getDefaultRenderer(Boolean.class));
+//		tableColumn.setCellEditor(tableProduct.getDefaultEditor(Boolean.class));
+//		tableColumn.setHeaderRenderer(new CheckboxHeader("Select All"));
+//		tableProduct.getTableHeader().setReorderingAllowed(false);
+//		tableProduct.getColumnModel().getColumn(0).setPreferredWidth(103);
+//		tableProduct.getColumnModel().getColumn(1).setPreferredWidth(97);
+//		tableProduct.getColumnModel().getColumn(2).setPreferredWidth(90);
+//		tableProduct.getColumnModel().getColumn(3).setPreferredWidth(82);
+//		tableProduct.getColumnModel().getColumn(4).setPreferredWidth(95);
+//		tableColumn.setCellRenderer(tableProduct.getDefaultRenderer(Boolean.class));
+//		tableColumn.setCellEditor(tableProduct.getDefaultEditor(Boolean.class));
+//		tableColumn.setHeaderRenderer(new CheckboxHeader("Select All"));
+//		tableProduct.getTableHeader().setReorderingAllowed(false);
+//		tableProduct.getTableHeader().setResizingAllowed(false);
+//		return tableProduct;
+//	}
+
+	private JPanel panelDetailBill() {
+		JPanel panelDetail = new JPanel();
 		panelDetail.setLayout(new BorderLayout(10, 10));
 
 		JPanel panelRemove = new JPanel();
-		panelDetail.add(panelRemove, BorderLayout.WEST);
-		panelRemove.setLayout(new BorderLayout(2, 2));
+		panelRemove.setLayout(new FlowLayout());
 
 		checkBoxSelectAll = new JCheckBox("Select All");
-		panelRemove.add(checkBoxSelectAll, BorderLayout.WEST);
-
+		panelRemove.add(checkBoxSelectAll);
 		buttonRemove = new JButton("Remove");
+		buttonRemove.setEnabled(false);
+		panelRemove.add(buttonRemove);
 		buttonRemove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		buttonRemove.setEnabled(false);
-		buttonRemove.setPreferredSize(new Dimension(84, 40));
-		panelRemove.add(buttonRemove, BorderLayout.EAST);
+
+		JPanel centerBlock = new JPanel();
+		centerBlock.setLayout(new BoxLayout(centerBlock, BoxLayout.Y_AXIS));
+		centerBlock.add(Box.createGlue());
+		centerBlock.add(panelRemove);
+		centerBlock.add(Box.createGlue());
+		panelDetail.add(centerBlock, BorderLayout.WEST);
 
 		JPanel panel = new JPanel();
 		panelDetail.add(panel, BorderLayout.CENTER);
@@ -237,8 +249,8 @@ public class GUI extends JFrame {
 		panel.add(panelCoupon, BorderLayout.NORTH);
 		panelCoupon.setLayout(new BorderLayout(2, 2));
 
-		JLabel lableCoupon = new JLabel("Coupon:");
-		panelCoupon.add(lableCoupon, BorderLayout.WEST);
+		JLabel labelCoupon = new JLabel("Coupon: ");
+		panelCoupon.add(labelCoupon, BorderLayout.WEST);
 
 		textFieldCoupon = new JTextField();
 		textFieldCoupon.setPreferredSize(new Dimension(50, 30));
@@ -268,76 +280,21 @@ public class GUI extends JFrame {
 		JButton buttonPay = new JButton("Pay");
 		buttonPay.setPreferredSize(new Dimension(80, 60));
 		panelPay.add(buttonPay, BorderLayout.EAST);
-
-		return panelBill;
+		return panelDetail;
 	}
 
-	public JPanel createListPanel() {
+	private JPanel createListItemProduct(int column) {
 		dimesionProductFrame = new Dimension(100, 100);
-		JPanel panelProduct = new JPanel(new GridLayout(0, 4, 10, 10));
+		JPanel panelProduct = new JPanel(new GridLayout(0, column, 10, 10));
 		for (int i = 0; i < listProducts.size(); i++) {
 			Product product = listProducts.get(i);
-			JPanel item = createPanelProduct(product.getName(), product.getId(), product.getQuantity(),
+			PanelItemProduct item = new PanelItemProduct(product.getName(), product.getId(), product.getQuantity(),
 					product.getFileName(), product.getPrice());
-			item.setPreferredSize(dimesionProductFrame);
+			item.setPreferredSize(new Dimension((int) widthPanelSelectProduct / column, 300));
 			panelProduct.add(item);
 		}
+
 		return panelProduct;
-	}
-
-	private JPanel createPanelProduct(String name, String id, int quantity, String linkImage, double price) {
-		Border border = new RoundBorder(10, 3, colorProductPanel);
-//		Create Frame product
-		JPanel panel = new JPanel();
-		panel.setLayout(new BorderLayout());
-
-//		Create Frame Image
-		JPanel panelImage = new JPanel();
-		panelImage.setLayout(new BorderLayout());
-		panel.setBorder(border);
-
-//		ImageIcon imageIcon = new ImageIcon(linkImage);
-		JLabel imageLabel = addImage(linkImage);
-		panelImage.add(imageLabel, BorderLayout.CENTER);
-		panel.add(panelImage, BorderLayout.CENTER);
-
-//		Create Frame product info
-		JPanel panelInfo = new JPanel();
-		panelInfo.setLayout(new GridLayout(4, 1, 5, 5));
-		JLabel nameLabel = new JLabel("Ten sp: " + name);
-		nameLabel.setHorizontalAlignment(JLabel.CENTER);
-		panelInfo.add(nameLabel);
-		JLabel idLabel = new JLabel("ID: " + id);
-		idLabel.setHorizontalAlignment(JLabel.CENTER);
-		panelInfo.add(idLabel);
-		JLabel priceLabel = new JLabel("Price: " + price + " VND");
-		panelInfo.add(priceLabel);
-		priceLabel.setHorizontalAlignment(JLabel.CENTER);
-		JLabel quantityLabel = new JLabel("Quantity: " + quantity);
-		quantityLabel.setHorizontalAlignment(JLabel.CENTER);
-		panelInfo.add(quantityLabel);
-		panel.add(panelInfo, BorderLayout.SOUTH);
-
-//		Decorate panel
-		panel.setBorder(border);
-		panel.setBackground(colorProductPanel);
-		panelInfo.setBackground(colorProductPanel);
-		panelImage.setBackground(colorProductPanel);
-		return panel;
-	}
-
-	private JLabel addImage(String linkImage) {
-		ImageIcon imageIcon = new ImageIcon(linkImage);
-		JLabel imageLabel = new JLabel(imageIcon);
-		imageLabel.setSize(new Dimension(200, 200));
-		Image image = imageIcon.getImage();
-		Image scaledImage = image.getScaledInstance(imageLabel.getWidth(), imageLabel.getHeight(), Image.SCALE_SMOOTH);
-		ImageIcon scaledIcon = new ImageIcon(scaledImage);
-		imageLabel.setIcon(scaledIcon);
-
-		imageLabel.setHorizontalAlignment(JLabel.CENTER);
-		imageLabel.setVerticalAlignment(JLabel.CENTER);
-		return imageLabel;
 	}
 
 	class CheckboxHeader implements TableCellRenderer {
@@ -409,14 +366,6 @@ public class GUI extends JFrame {
 
 	public void setCheckBoxFood(JCheckBox[] checkBoxFood) {
 		this.checkBoxFood = checkBoxFood;
-	}
-
-	public Color getColorProductPanel() {
-		return colorProductPanel;
-	}
-
-	public void setColorProductPanel(Color colorProductPanel) {
-		this.colorProductPanel = colorProductPanel;
 	}
 
 	public JCheckBox getSelectAll() {

@@ -6,7 +6,7 @@ import java.awt.GridLayout;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class KB {
+public class KeyboardVitural {
 	public static void main(String[] args) {
 		// Create a JFrame object to hold the text field and virtual keyboard
 		JFrame frame = new JFrame("Virtual Keyboard Example");
