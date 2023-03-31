@@ -3,6 +3,7 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 
+import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -13,8 +14,10 @@ public class TableBill extends JPanel {
 	}
 
 	public void create() {
-		this.setLayout(new GridLayout(1, 0, 0, 0));
-		this.setLayout(new BorderLayout(0, 0));
+		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		JLabel heading = new JLabel();
+		heading.setLayout(new BorderLayout());
+		
 		JLabel labelID = new JLabel("ID");
 		labelID.setEnabled(false);
 
@@ -35,9 +38,10 @@ public class TableBill extends JPanel {
 		JLabel labelTotalPrice = new JLabel("TOTAL PRICE");
 		panelMoreInfoItem.add(labelTotalPrice);
 
-		this.add(labelID, BorderLayout.WEST);
-		this.add(labelName, BorderLayout.CENTER);
-		this.add(panelMoreInfoItem, BorderLayout.EAST);
+		heading.add(labelID, BorderLayout.WEST);
+		heading.add(labelName, BorderLayout.CENTER);
+		heading.add(panelMoreInfoItem, BorderLayout.EAST);
+		this.add(heading);
 	}
 
 	public JPanel createItemBill(String id, String name, int quantity, double unitPrice) {
