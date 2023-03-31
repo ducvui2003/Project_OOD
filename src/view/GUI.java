@@ -46,6 +46,8 @@ public class GUI extends JFrame {
 			dimesionProductFrame;
 	private JButton buttonFind;
 	private String[] listItem = { "All", "Drink", "Food", "Bake" };
+	private Object[] nameColumn = { false, "Product Name", "Price", "Quantity", "Account", "Action" };
+	private JComboBox comboBoxFilter;
 	private JComboBox<JCheckBox> comboBoxFilterAdvanced;
 	private JCheckBox[] checkBoxDrink = { new JCheckBox("Hot"), new JCheckBox("Cold") };
 	private JCheckBox[] checkBoxBake = { new JCheckBox("Banh man"), new JCheckBox("Banh ngot") };
